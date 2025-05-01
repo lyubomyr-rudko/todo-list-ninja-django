@@ -18,10 +18,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from ninja import NinjaAPI
+from ninja.security import APIKeyCookie
 from todos.api import router as todos_router
 from users.api import router as users_router
 
-api = NinjaAPI(urls_namespace='blog_api')
+api = NinjaAPI(csrf=False)
 api.add_router("/todos/", todos_router)
 api.add_router("/users/", users_router)
 

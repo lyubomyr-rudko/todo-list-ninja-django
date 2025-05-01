@@ -41,6 +41,14 @@ INSTALLED_APPS = [
     "users",
 ]
 
+# disable csrf for the API
+CSRF_TRUSTED_ORIGINS = ["http://localhost:8000"]
+CSRF_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_PATH = "/api/v1/"
+CSRF_COOKIE_NAME = "csrftoken"
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
