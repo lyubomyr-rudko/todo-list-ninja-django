@@ -1,0 +1,15 @@
+from ninja import ModelSchema
+from .models import Task
+
+
+class TaskIn(ModelSchema):
+    class Config:
+        model = Task
+        model_exclude = ["id", "user", "complete", "created"]
+
+
+class TaskOut(ModelSchema):
+    class Config:
+        model = Task
+        model_fields = ["id", "title", "description", "complete", "created"]
+
