@@ -1,4 +1,5 @@
 from ninja import Router
+from django.http import JsonResponse
 from .schemas import TaskIn, TaskOut
 from .models import Task
 from functools import wraps
@@ -9,7 +10,8 @@ def auth_required(fn):
     @wraps(fn)
     def wrapper(request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return {"error": "User not authenticated"}
+            return JsonResponse({"error": "User not authenticated"}, status=401)
+
         return fn(request, *args, **kwargs)
 
     return wrapper
@@ -68,7 +70,7 @@ def list_completed_tasks(request):
 @auth_required
 def complete_task(request, task_id: int):
     task = Task.objects.get(id=task_id, user=request.user)
-    task.completed = True
+    task.complete = True
     task.save()
 
     return task
