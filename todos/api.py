@@ -1,6 +1,6 @@
 from ninja import Router
 from django.http import JsonResponse
-from .schemas import TaskIn, TaskOut
+from .schemas import TaskIn, TaskOut, PartialTaskIn
 from .models import Task
 from functools import wraps
 
@@ -41,12 +41,18 @@ def retrieve_task(request, task_id: int):
     return task
 
 
-@router.put("/task/{task_id}", response=TaskOut, url_name="update_todo_task", tags=["Task"])
+@router.patch("/task/{task_id}", response=TaskOut, url_name="update_todo_task", tags=["Task"])
 @auth_required
-def update_task(request, task_id: int, payload: TaskIn):
+def update_task(request, task_id: int, payload: PartialTaskIn):
     task = Task.objects.get(id=task_id, user=request.user)
-    for attr, value in payload.dict().items():
-        setattr(task, attr, value)
+
+    if payload.title is not None:
+        task.title = payload.title
+    if payload.description is not None:
+        task.description = payload.description
+    if payload.complete is not None:
+        task.complete = payload.complete
+
     task.save()
 
     return task
@@ -59,10 +65,10 @@ def delete_task(request, task_id: int):
 
     return task
 
-@router.get("/task/complete", response=list[TaskOut], url_name="list_completed_todo_tasks", tags=["Task"])
+@router.get("/task/complete", response=list[TaskOut], url_name="list_complete_tasks", tags=["Task"])
 @auth_required
-def list_completed_tasks(request):
-    tasks = Task.objects.filter(user=request.user, completed=True)
+def list_complete_tasks(request):
+    tasks = Task.objects.filter(user=request.user)
 
     return tasks
 
