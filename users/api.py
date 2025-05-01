@@ -2,9 +2,15 @@ from ninja import Router
 from django.contrib.auth.models import User
 from .schemas import RegisterUser, LoginUser
 from django.contrib.auth import logout as auth_logout, authenticate, login as auth_login
+from django.middleware.csrf import get_token
 
 
 router = Router()
+
+
+@router.get("/set-csrf-token")
+def get_csrf_token(request):
+    return {"csrftoken": get_token(request)}
 
 
 @router.post("/register", tags=["User"])

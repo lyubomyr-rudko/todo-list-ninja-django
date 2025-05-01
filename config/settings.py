@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "ninja",
+    "corsheaders",
     "todos",
     "users",
 ]
@@ -49,7 +51,12 @@ CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_PATH = "/api/v1/"
 CSRF_COOKIE_NAME = "csrftoken"
 
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]  # React app URL
+CSRF_TRUSTED_ORIGINS = ['http://localhost:5173']
+
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
